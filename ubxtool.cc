@@ -1386,6 +1386,12 @@ int main(int argc, char** argv)
           }
           else if(id.first ==2) { // GALILEO
             auto inav = getInavFromSFRBXMsg(payload);
+            uint8_t hkroot=1;
+            uint32_t mack=1;
+            getOSNMAFromSFRBXMsg(payload, &hkroot, &mack);
+            
+            cerr<<humanTimeNow()<<" osnma hkroot : "<<hkroot<<" mack : "<<mack<<endl;
+            
             unsigned int wtype = getbitu(&inav[0], 0, 6);
 
             uint32_t satTOW;

@@ -88,6 +88,19 @@ basic_string<uint8_t> getInavFromSFRBXMsg(std::basic_string_view<uint8_t> msg)
   return inav;
 }
 
+bool getOSNMAFromSFRBXMsg(std::basic_string_view<uint8_t> msg, uint8_t *hkroot, uint32_t *mack)
+{
+  // byte order adjustment
+  std::basic_string<uint8_t> payload;
+  for(unsigned int i = 0 ; i < (msg.size() - 8) / 4; ++i)
+    for(int j=1; j <= 4; ++j)
+      payload.append(1, msg[8 + (i+1) * 4 -j]);
+
+  *hkroot = getbitu(payload.c_str(), 146, 8);
+  *mack = getbitu(payload.c_str(), 154, 32);
+  return true;
+}
+
 // XXX this should do the parity check
 basic_string<uint8_t> getGPSFromSFRBXMsg(std::basic_string_view<uint8_t> msg)
 {
